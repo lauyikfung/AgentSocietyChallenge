@@ -1,8 +1,16 @@
 # Recommendation Agent
 
 - The agent is stored in myagent2.py
+  - First conclude the user's feature from its reviews with the info of the corresponding product and stars:
+    - The score is computed as: $\frac{score-score_{avg}}{score_{\max}-score_{\min}+\epsilon}+\frac{score-2.5}{5+\epsilon} * (1+log(1+additional-indicator))$, then clip to [-1, 1].
+    - The additional indicator is based on other features such as useful/funny/cool (only valid for "yelp" task): **need implementation**
+  - Second conclude the user's friend's feature similarly (only valid for "yelp" task), and then combine the user's feature and friends' feature
+  - Then conclude the features for candidate, and finally call LLM to rank all the candidates
+    - LLM first generate a temperary conclusion, then based on the full information, as well as the average rating and rating counts, to get a final conclusion
+  - **TODO: memory, reasoning functions need implementation**
 - In "AgentSocietyChallenge/websocietysimulator/llm/llm.py", MyLLM class is implemented for SGLang-style API call
   - To start SGLang API service, first pip install "sglang", then setup sglang model server: `python3 -m sglang.launch_server --model-path Qwen/Qwen3-4B-Instruct-2507 --host 0.0.0.0 --log-level warning --port 12345 --dp-size 4` (you can change dp-size for multiple GPUs)
+  - You can use other types of models.
 - Then you can run the following command for testing recommendation task:
 - ```
   from websocietysimulator import Simulator
